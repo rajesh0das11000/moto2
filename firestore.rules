@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helpers
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    function incoming() {
+      return request.resource.data;
+    }
+
+    // --- Users ---
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) 
+        && incoming().uid == userId
+        && incoming().keys().hasAll(['uid', 'email', 'createdAt'])
+        && incoming().keys().size() <= 6;
+      allow update: if isOwner(userId)
+        && incoming().uid == userId
+        && incoming().diff(resource.data).affectedKeys().hasOnly(['displayName', 'phoneNumber']);
+    }
+
+    // --- Services ---
+    match /services/{serviceId} {
+      allow list, get: if true; // Public catalog
+      allow write: if false; // Read-only for users (Admin only via console for now)
+    }
+
+    // --- Bookings ---
+    match /bookings/{bookingId} {
+      allow list, get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() 
+        && incoming().userId == request.auth.uid
+        && incoming().status == 'pending'
+        && incoming().keys().hasAll(['userId', 'serviceId', 'serviceName', 'date', 'time', 'status', 'createdAt'])
+        && incoming().createdAt == request.time;
+      allow update: if isSignedIn() 
+        && resource.data.userId == request.auth.uid
+        && incoming().userId == resource.data.userId
+        && incoming().diff(resource.data).affectedKeys().hasOnly(['status', 'notes'])
+        && (resource.data.status == 'pending' && incoming().status == 'cancelled');
+    }
+  }
+}

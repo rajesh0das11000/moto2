@@ -1,0 +1,6 @@
+{
+  "name": "MotoGlow - Wash & Repair Hub",
+  "description": "Premium car wash, bike wash, and expert bike repair services. Book online, track history, and get service reminders.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["Booking System", "Service History", "Real-time Reminders"]
+}
