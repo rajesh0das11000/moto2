@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 import {
   ChevronRight,
@@ -130,15 +131,14 @@ export default function BlogSection() {
                 />
 
                 {/* Read More */}
-                <a
-                  href={post.link}
-                  target="_blank"
-                  className="inline-flex items-center gap-2 mt-6 text-blue-400 hover:text-blue-300 font-medium"
-                >
-                  Read More
+               <Link
+  href={`/blog/${post.slug}`}
+  className="inline-flex items-center gap-2 mt-8 text-blue-400 hover:text-blue-300 font-semibold transition-all"
+>
+  Read Article
 
-                  <ChevronRight className="w-4 h-4" />
-                </a>
+  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+</Link>
               </div>
             </article>
           ))}
