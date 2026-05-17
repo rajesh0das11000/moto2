@@ -11,7 +11,7 @@ export default function ContactForm() {
     useState(false);
 
   const [error, setError] =
-    useState(false);
+    useState('');
 
   async function handleSubmit(e: any) {
 
@@ -19,13 +19,13 @@ export default function ContactForm() {
 
     setLoading(true);
     setSuccess(false);
-    setError(false);
+    setError('');
 
     const formData = new FormData();
 
     formData.append(
       'names',
-      e.target.name.value
+      e.target.names.value
     );
 
     formData.append(
@@ -34,8 +34,8 @@ export default function ContactForm() {
     );
 
     formData.append(
-      'phone',
-      e.target.phone.value
+      'subject',
+      e.target.subject.value
     );
 
     formData.append(
@@ -66,14 +66,19 @@ export default function ContactForm() {
 
       } else {
 
-        setError(true);
+        setError(
+          data.message ||
+          'Submission failed'
+        );
       }
 
     } catch (err) {
 
       console.error(err);
 
-      setError(true);
+      setError(
+        'Server error occurred'
+      );
     }
 
     setLoading(false);
@@ -85,16 +90,16 @@ export default function ContactForm() {
       className="py-32 bg-[#0a0d14]"
     >
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto px-4">
 
         <div className="text-center mb-16">
 
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-5xl font-bold text-white mb-4">
             Contact Us
           </h2>
 
-          <p className="text-slate-400 text-lg">
-            Book your bike or car service today.
+          <p className="text-slate-400">
+            Send your enquiry instantly.
           </p>
         </div>
 
@@ -106,10 +111,10 @@ export default function ContactForm() {
           {/* Name */}
           <input
             type="text"
-            name="name"
+            name="names"
             placeholder="Your Name"
             required
-            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white"
           />
 
           {/* Email */}
@@ -118,16 +123,16 @@ export default function ContactForm() {
             name="email"
             placeholder="Email Address"
             required
-            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white"
           />
 
-          {/* Phone */}
+          {/* Subject */}
           <input
             type="text"
-            name="phone"
-            placeholder="Phone Number"
+            name="subject"
+            placeholder="Subject"
             required
-            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white"
           />
 
           {/* Message */}
@@ -136,38 +141,32 @@ export default function ContactForm() {
             rows={6}
             placeholder="Your Message"
             required
-            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white"
           />
 
-          {/* Submit */}
+          {/* Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-semibold transition-all"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-semibold"
           >
             {loading
               ? 'Sending...'
-              : 'Send Message'}
+              : 'Submit Form'}
           </button>
 
-          {/* Success Message */}
+          {/* Success */}
           {success && (
-            <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-4">
-
-              <p className="text-green-400 text-center">
-                Message sent successfully.
-              </p>
-            </div>
+            <p className="text-green-400 text-center">
+              Message sent successfully.
+            </p>
           )}
 
-          {/* Error Message */}
+          {/* Error */}
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
-
-              <p className="text-red-400 text-center">
-                Something went wrong.
-              </p>
-            </div>
+            <p className="text-red-400 text-center">
+              {error}
+            </p>
           )}
         </form>
       </div>
