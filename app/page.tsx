@@ -211,7 +211,7 @@ export default function Home() {
           )}
         </div>
       </section>
-
+ <ContactForm />
       {/* Footer */}
       <footer className="bg-[#05070a] border-t border-white/5 pt-32 pb-16">
 
