@@ -15,14 +15,23 @@ import {
 } from 'lucide-react';
 
 async function getPosts() {
-  const res = await fetch(
-    'https://indigo-mallard-456804.hostingersite.com/wp-json/wp/v2/posts?_embed',
-    {
-      cache: 'no-store',
-    }
-  );
+  try {
+    const res = await fetch(
+      'https://indigo-mallard-456804.hostingersite.com/wp-json/wp/v2/posts?_embed',
+      {
+        cache: 'no-store',
+      }
+    );
 
-  return res.json();
+    if (!res.ok) {
+      throw new Error('Failed to fetch posts');
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error('WordPress API Error:', error);
+    return [];
+  }
 }
 
 export default function Home() {
@@ -30,18 +39,23 @@ export default function Home() {
     useState<any>(null);
 
   const [posts, setPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadPosts() {
       const data = await getPosts();
+
+      console.log('Posts:', data);
+
       setPosts(data);
+      setLoading(false);
     }
 
     loadPosts();
   }, []);
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-black">
       <Navbar />
 
       <Hero />
@@ -79,21 +93,21 @@ export default function Home() {
                 step: '01',
                 title: 'Select Service',
                 desc:
-                  'Pick from our range of washes, detailing or specialized repairs.',
+                  'Pick from our range of washes, detailing or repairs.',
               },
 
               {
                 step: '02',
                 title: 'Secure Slot',
                 desc:
-                  'Pick a date and time that fits your requirements.',
+                  'Choose your preferred time and date.',
               },
 
               {
                 step: '03',
                 title: 'Ride Revived',
                 desc:
-                  'Confirm your booking and experience expert engine care.',
+                  'Experience premium vehicle care.',
               },
             ].map((item, i) => (
               <div
@@ -108,7 +122,7 @@ export default function Home() {
                   {item.title}
                 </h3>
 
-                <p className="text-slate-500 text-sm leading-relaxed relative z-10">
+                <p className="text-slate-500 text-sm relative z-10">
                   {item.desc}
                 </p>
               </div>
@@ -133,56 +147,67 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {loading ? (
+            <div className="text-center text-slate-400">
+              Loading posts...
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="text-center text-red-500">
+              No blog posts found.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-            {posts.map((post) => (
-              <div
-                key={post.id}
-                className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden"
-              >
+              {posts.map((post) => (
+                <div
+                  key={post.id}
+                  className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden"
+                >
 
-                {post._embedded?.['wp:featuredmedia']?.[0]
-                  ?.source_url && (
-                  <img
-                    src={
-                      post._embedded[
-                        'wp:featuredmedia'
-                      ][0].source_url
-                    }
-                    alt={post.title.rendered}
-                    className="w-full h-56 object-cover"
-                  />
-                )}
+                  {post._embedded?.['wp:featuredmedia']?.[0]
+                    ?.source_url && (
+                    <img
+                      src={
+                        post._embedded[
+                          'wp:featuredmedia'
+                        ][0].source_url
+                      }
+                      alt={post.title.rendered}
+                      className="w-full h-56 object-cover"
+                    />
+                  )}
 
-                <div className="p-6">
+                  <div className="p-6">
 
-                  <h3
-                    className="text-xl font-bold text-white mb-4"
-                    dangerouslySetInnerHTML={{
-                      __html: post.title.rendered,
-                    }}
-                  />
+                    <h3
+                      className="text-xl font-bold text-white mb-4"
+                      dangerouslySetInnerHTML={{
+                        __html: post.title.rendered,
+                      }}
+                    />
 
-                  <div
-                    className="text-slate-400 text-sm line-clamp-3"
-                    dangerouslySetInnerHTML={{
-                      __html: post.excerpt.rendered,
-                    }}
-                  />
+                    <div
+                      className="text-slate-400 text-sm line-clamp-3"
+                      dangerouslySetInnerHTML={{
+                        __html: post.excerpt.rendered,
+                      }}
+                    />
 
-                  <a
-                    href={post.link}
-                    target="_blank"
-                    className="inline-flex items-center mt-6 text-blue-400 hover:text-blue-300"
-                  >
-                    Read More
+                    <a
+                      href={post.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center mt-6 text-blue-400 hover:text-blue-300"
+                    >
+                      Read More
 
-                    <ChevronRight className="w-4 h-4 ml-1" />
-                  </a>
+                      <ChevronRight className="w-4 h-4 ml-1" />
+                    </a>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -211,8 +236,7 @@ export default function Home() {
 
               <p className="text-slate-500 max-w-sm mb-10 text-sm">
                 Elite vehicle care since 2015.
-                Premium detailing and bike repair
-                services with precision.
+                Premium detailing and bike repair services.
               </p>
 
               <div className="flex gap-4">
@@ -239,84 +263,11 @@ export default function Home() {
                 </a>
               </div>
             </div>
-
-            <div>
-              <h4 className="font-black text-slate-500 mb-8 uppercase text-[10px]">
-                Services
-              </h4>
-
-              <ul className="space-y-6">
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-slate-400 hover:text-blue-400"
-                  >
-                    Car Detailing
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-slate-400 hover:text-blue-400"
-                  >
-                    Ceramic Coating
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-slate-400 hover:text-blue-400"
-                  >
-                    Engine Repair
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-black text-slate-500 mb-8 uppercase text-[10px]">
-                Business
-              </h4>
-
-              <ul className="space-y-6">
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-slate-400 hover:text-blue-400"
-                  >
-                    About Us
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-slate-400 hover:text-blue-400"
-                  >
-                    Privacy Policy
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-slate-400 hover:text-blue-400"
-                  >
-                    Terms of Service
-                  </a>
-                </li>
-              </ul>
-            </div>
           </div>
 
           <div className="pt-10 border-t border-white/5 text-center">
             <p className="text-xs text-slate-600">
-              © {new Date().getFullYear()} MOTOGLOW
-              PREMIUM
+              © {new Date().getFullYear()} MOTOGLOW PREMIUM
             </p>
           </div>
         </div>
