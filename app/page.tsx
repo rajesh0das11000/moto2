@@ -67,6 +67,7 @@ export default function Home() {
           setSelectedService(service)
         }
       />
+      <BlogSection />
 
       {/* How it Works */}
       <section
