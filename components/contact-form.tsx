@@ -58,16 +58,22 @@ export default function ContactForm() {
 
       console.log(data);
 
-      setSuccess(true);
+      if (response.ok) {
 
-      e.target.reset();
+        setSuccess(true);
+
+        e.target.reset();
+
+      } else {
+
+        setError(true);
+      }
 
     } catch (err) {
 
       console.error(err);
 
       setError(true);
-
     }
 
     setLoading(false);
@@ -120,6 +126,7 @@ export default function ContactForm() {
             type="text"
             name="phone"
             placeholder="Phone Number"
+            required
             className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
           />
 
@@ -132,7 +139,7 @@ export default function ContactForm() {
             className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
           />
 
-          {/* Button */}
+          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
@@ -143,7 +150,7 @@ export default function ContactForm() {
               : 'Send Message'}
           </button>
 
-          {/* Success */}
+          {/* Success Message */}
           {success && (
             <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-4">
 
@@ -153,7 +160,7 @@ export default function ContactForm() {
             </div>
           )}
 
-          {/* Error */}
+          {/* Error Message */}
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
 
