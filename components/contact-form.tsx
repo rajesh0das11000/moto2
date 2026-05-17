@@ -11,7 +11,7 @@ export default function ContactForm() {
     useState(false);
 
   const [error, setError] =
-    useState('');
+    useState(false);
 
   async function handleSubmit(e: any) {
 
@@ -19,7 +19,7 @@ export default function ContactForm() {
 
     setLoading(true);
     setSuccess(false);
-    setError('');
+    setError(false);
 
     try {
 
@@ -33,9 +33,9 @@ export default function ContactForm() {
           },
 
           body: JSON.stringify({
-            name: e.target.names.value,
+            name: e.target.name.value,
             email: e.target.email.value,
-            subject: e.target.subject.value,
+            phone: e.target.phone.value,
             message: e.target.message.value,
           }),
         }
@@ -54,19 +54,14 @@ export default function ContactForm() {
 
       } else {
 
-        setError(
-          data.message ||
-          'Submission failed'
-        );
+        setError(true);
       }
 
     } catch (err) {
 
       console.error(err);
 
-      setError(
-        'Server error occurred'
-      );
+      setError(true);
     }
 
     setLoading(false);
@@ -87,7 +82,7 @@ export default function ContactForm() {
           </h2>
 
           <p className="text-slate-400 text-lg">
-            Send your enquiry instantly.
+            Book your bike or car service today.
           </p>
         </div>
 
@@ -99,7 +94,7 @@ export default function ContactForm() {
           {/* Name */}
           <input
             type="text"
-            name="names"
+            name="name"
             placeholder="Your Name"
             required
             className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
@@ -114,11 +109,11 @@ export default function ContactForm() {
             className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
           />
 
-          {/* Subject */}
+          {/* Phone */}
           <input
             type="text"
-            name="subject"
-            placeholder="Subject"
+            name="phone"
+            placeholder="Phone Number"
             required
             className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
           />
@@ -132,7 +127,7 @@ export default function ContactForm() {
             className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
           />
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
@@ -140,7 +135,7 @@ export default function ContactForm() {
           >
             {loading
               ? 'Sending...'
-              : 'Submit Form'}
+              : 'Send Message'}
           </button>
 
           {/* Success Message */}
@@ -158,7 +153,7 @@ export default function ContactForm() {
             <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
 
               <p className="text-red-400 text-center">
-                {error}
+                Something went wrong.
               </p>
             </div>
           )}
