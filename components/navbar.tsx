@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
+
 import {
   Bike,
   User,
@@ -46,7 +47,7 @@ export const Navbar = () => {
             </span>
           </Link>
 
-          {/* Desktop Nav */}
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
 
             <Link
@@ -56,12 +57,15 @@ export const Navbar = () => {
               Services
             </Link>
 
-            <Link
-              href="#blogs"
+            {/* BLOGS MENU */}
+            <a
+              href="https://indigo-mallard-456804.hostingersite.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-sm font-medium text-slate-400 hover:text-blue-400 transition-colors"
             >
               Blogs
-            </Link>
+            </a>
 
             <Link
               href="#how-it-works"
@@ -106,7 +110,7 @@ export const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Button */}
+          {/* Mobile Menu Button */}
           <div className="md:hidden">
 
             <button
@@ -125,7 +129,7 @@ export const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Nav */}
+      {/* Mobile Navigation */}
       <AnimatePresence>
 
         {isOpen && (
@@ -157,15 +161,15 @@ export const Navbar = () => {
                 Services
               </Link>
 
-              <Link
-                href="#blogs"
-                onClick={() =>
-                  setIsOpen(false)
-                }
+              {/* MOBILE BLOGS MENU */}
+              <a
+                href="https://indigo-mallard-456804.hostingersite.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="block px-3 py-2 text-base font-medium text-slate-300 hover:bg-white/5 rounded-lg"
               >
                 Blogs
-              </Link>
+              </a>
 
               <Link
                 href="#how-it-works"
