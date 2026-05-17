@@ -6,6 +6,7 @@ import { Hero } from '@/components/hero';
 import { ServicesList } from '@/components/services';
 import { BookingModal } from '@/components/booking-modal';
 import ContactForm from '@/components/contact-form';
+import BlogSection from '@/components/blog-section';
 
 import {
   Phone,
