@@ -21,35 +21,23 @@ export default function ContactForm() {
     setSuccess(false);
     setError('');
 
-    const formData = new FormData();
-
-    formData.append(
-      'names',
-      e.target.names.value
-    );
-
-    formData.append(
-      'email',
-      e.target.email.value
-    );
-
-    formData.append(
-      'subject',
-      e.target.subject.value
-    );
-
-    formData.append(
-      'message',
-      e.target.message.value
-    );
-
     try {
 
       const response = await fetch(
-        'https://indigo-mallard-456804.hostingersite.com/wp-json/fluentform/v1/contact-forms/1/entries',
+        'https://indigo-mallard-456804.hostingersite.com/wp-json/custom/v1/contact',
         {
           method: 'POST',
-          body: formData,
+
+          headers: {
+            'Content-Type': 'application/json',
+          },
+
+          body: JSON.stringify({
+            name: e.target.names.value,
+            email: e.target.email.value,
+            subject: e.target.subject.value,
+            message: e.target.message.value,
+          }),
         }
       );
 
@@ -90,15 +78,15 @@ export default function ContactForm() {
       className="py-32 bg-[#0a0d14]"
     >
 
-      <div className="max-w-3xl mx-auto px-4">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="text-center mb-16">
 
-          <h2 className="text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
             Contact Us
           </h2>
 
-          <p className="text-slate-400">
+          <p className="text-slate-400 text-lg">
             Send your enquiry instantly.
           </p>
         </div>
@@ -114,7 +102,7 @@ export default function ContactForm() {
             name="names"
             placeholder="Your Name"
             required
-            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
           />
 
           {/* Email */}
@@ -123,7 +111,7 @@ export default function ContactForm() {
             name="email"
             placeholder="Email Address"
             required
-            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
           />
 
           {/* Subject */}
@@ -132,7 +120,7 @@ export default function ContactForm() {
             name="subject"
             placeholder="Subject"
             required
-            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
           />
 
           {/* Message */}
@@ -141,32 +129,38 @@ export default function ContactForm() {
             rows={6}
             placeholder="Your Message"
             required
-            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-slate-500 outline-none focus:border-blue-500"
           />
 
-          {/* Button */}
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-semibold"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-semibold transition-all"
           >
             {loading
               ? 'Sending...'
               : 'Submit Form'}
           </button>
 
-          {/* Success */}
+          {/* Success Message */}
           {success && (
-            <p className="text-green-400 text-center">
-              Message sent successfully.
-            </p>
+            <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-4">
+
+              <p className="text-green-400 text-center">
+                Message sent successfully.
+              </p>
+            </div>
           )}
 
-          {/* Error */}
+          {/* Error Message */}
           {error && (
-            <p className="text-red-400 text-center">
-              {error}
-            </p>
+            <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
+
+              <p className="text-red-400 text-center">
+                {error}
+              </p>
+            </div>
           )}
         </form>
       </div>
